@@ -12,10 +12,10 @@ module "synograph" {
   dependency = join(",", [module.bonjour.complete)
 }
 
-module "sourire" {
+module "france" {
   source = "./print_string"
 
-  string = ":D\n"
+  string = "France"
 
   dependency = join(",", [module.synograph.complete])
 }

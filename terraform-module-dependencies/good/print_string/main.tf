@@ -2,7 +2,7 @@ resource "null_resource" "print_string" {
   depends_on = [null_resource.dependency]
 
   provisioner "local-exec" {
-    command = "echo -n ${var.string} | tee -a /tmp/testTerraform"
+    command = "printf %s ${var.string} >> /tmp/testTerraform"
   }
 }
 

@@ -10,8 +10,8 @@ module "synograph" {
   string = "Synograph "
 }
 
-module "sourire" {
+module "france" {
   source = "./print_string"
 
-  string = ":D\n"
+  string = "France"
 }
