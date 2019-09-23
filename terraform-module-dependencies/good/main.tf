@@ -1,18 +1,21 @@
-module "" {
-  source = "./module_dependency"
+module "bonjour" {
+  source = "./print_string"
 
-  module_name = "a"
+  string = "Bonjour "
 }
 
-module "b" {
-  source = "./module_dependency"
+module "synograph" {
+  source = "./print_string"
 
-  module_name = "b"
+  string = "Synograph "
+
+  dependency = join(",", [module.bonjour.complete)
 }
 
-module "c" {
-  source = "./module_dependency"
+module "sourire" {
+  source = "./print_string"
 
-  module_name = "c"
-  module_dependency = join(",", [module.b.module_complete, module.a.module_complete])
+  string = ":D\n"
+
+  dependency = join(",", [module.synograph.complete])
 }
