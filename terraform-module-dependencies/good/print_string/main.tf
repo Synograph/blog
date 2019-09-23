@@ -1,4 +1,4 @@
-resource "null_resource" "print_string" {
+resource "null_resource" "string" {
   depends_on = [null_resource.dependency]
 
   provisioner "local-exec" {

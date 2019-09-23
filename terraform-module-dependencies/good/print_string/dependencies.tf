@@ -11,3 +11,11 @@ resource "null_resource" "complete" {
 variable "dependency" {
   default = ""
 }
+
+variable "moduleName" {
+  default = ""
+}
+
+output "complete" {
+  value = "${var.dependency}${var.dependency == "" ? "" : "->"}${var.moduleName}(${null_resource.complete.id})"
+}
