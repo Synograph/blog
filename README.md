@@ -1,2 +1,3 @@
-# blog
-blog example code
+# Blog
+
+All the [Synograph.com](https://www.synograph.com) blog example code.
