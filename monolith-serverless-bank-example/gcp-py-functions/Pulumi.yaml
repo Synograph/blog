@@ -1,3 +1,0 @@
-name: gcp-py-functions
-runtime: python
-description: A minimal Python Pulumi program using Google Cloud Functions.
