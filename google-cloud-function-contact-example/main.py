@@ -5,6 +5,8 @@ from flask import Flask, redirect
 
 def handleContactForm(request):
     request_json = request.get_json()
+    contactEmail = os.environ.get('SYNOGRAPH_CONTACT_EMAIL')
+    basePathSite = os.environ.get('SYNOGRAPH_BASE_PATH_SITE')
     content = dict()
 
     if request_json and 'email' in request_json:
@@ -21,18 +23,18 @@ def handleContactForm(request):
         content['_next'] = request_json['_next']
 
     # Send to Synograph
-    sendMail(email,
-             'contact@synograph.com',
+    sendMail(content['email'],
+             contactEmail,
              content,
              os.environ.get('CONTACT_FORM_SYNOGRAPH_ID'))
 
-    # Send to customer
-    sendMail('contact@synograph.com',
-             email,
+    # Send to Customer
+    sendMail(contactEmail,
+             content['email'],
              content,
              os.environ.get('CONTACT_FORM_CLIENT_ID'))
 
-    return redirect("https://www.synograph.com" + content['_next'], code=302)
+    return redirect(basePathSite + content['_next'], code=302)
 
 def sendMail(fromAddress,toAddress,content,templateId):
     message = Mail(
@@ -44,7 +46,7 @@ def sendMail(fromAddress,toAddress,content,templateId):
         'lastName': content['lastName'],
         'company': content['content'],
         'email': content['email'],
-        'message' content['message']
+        'message': content['message']
         }
     message.template_id = templateId
 try:
@@ -54,4 +56,4 @@ try:
     print(response.body)
     print(response.headers)
 except Exception as e:
-    print(e.message)
+    print(e)
