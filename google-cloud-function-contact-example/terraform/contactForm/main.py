@@ -5,33 +5,31 @@ from flask import redirect
 
 
 def handleContactForm(request):
-    request_json = request.get_json()
     contactEmail = os.environ.get('CONTACT_EMAIL')
     basePathSite = 'https://{0}/'.format(request.host)
     content = dict()
 
     # Check form entry
-    if request_json and 'email' in request_json:
-        content['email'] = request_json['email']
-    if request_json and 'firstName' in request_json:
-        content['firstName'] = request_json['firstName']
-    if request_json and 'lastName' in request_json:
-        content['lastName'] = request_json['lastName']
-    if request_json and 'message' in request_json:
-        content['message'] = request_json['message']
-    if request_json and 'company' in request_json:
-        content['company'] = request_json['company']
-    if request_json and '_next' in request_json:
-        content['_next'] = request_json['_next']
+    content['email'] = request.form['email']
+    content['firstName'] = request.form['firstName']
+    content['lastName'] = request.form['lastName']
+    content['message'] = request.form['message']
+    content['company'] = request.form['company']
+    content['_next'] = request.form['_next']
+    content['_oops'] = request.form['_oops']
+
 
     # Send to Contact email
-    sendMail(content['email'],
+    response = sendMail(content['email'],
              contactEmail,
              content,
              os.environ.get('CONTACT_FORM_INTERNAL_TEMPLATE_ID'))
 
+    if response != 200:
+        return redirect(basePathSite + content['_oops'], code=302)
+
     # Send to Client
-    sendMail(contactEmail,
+    response = sendMail(contactEmail,
              content['email'],
              content,
              os.environ.get('CONTACT_FORM_CLIENT_TEMPLATE_ID'))
@@ -55,8 +53,6 @@ def sendMail(fromAddress, toAddress, content, templateId):
     try:
         sendgrid_client = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
         response = sendgrid_client.send(message)
-        print(response.status_code)
-        print(response.body)
-        print(response.headers)
+        return response.status_code
     except Exception as e:
-        print(e)
+        return e
