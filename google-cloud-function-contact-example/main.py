@@ -5,7 +5,7 @@ from flask import Flask, redirect
 
 def handleContactForm(request):
     request_json = request.get_json()
-    formContent = dict()
+    content = dict()
 
     if request_json and 'email' in request_json:
         content['email'] = request_json['email']
