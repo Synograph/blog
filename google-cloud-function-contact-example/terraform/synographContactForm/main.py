@@ -1,7 +1,8 @@
 import os
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
-from flask import Flask, redirect
+from flask import redirect
+
 
 def handleContactForm(request):
     request_json = request.get_json()
@@ -9,6 +10,7 @@ def handleContactForm(request):
     basePathSite = os.environ.get('SYNOGRAPH_BASE_PATH_SITE')
     content = dict()
 
+    # Check form entry
     if request_json and 'email' in request_json:
         content['email'] = request_json['email']
     if request_json and 'firstName' in request_json:
@@ -36,12 +38,13 @@ def handleContactForm(request):
 
     return redirect(basePathSite + content['_next'], code=302)
 
-def sendMail(fromAddress,toAddress,content,templateId):
+
+def sendMail(fromAddress, toAddress, content, templateId):
     message = Mail(
-        from_email = fromAddress,
-        to_emails = toAddress,
-        subject = 'none',
-        html_content = 'none')
+        from_email=fromAddress,
+        to_emails=toAddress,
+        subject='none',
+        html_content='none')
     message.dynamic_template_data = {
         'firstName': content['firstName'],
         'lastName': content['lastName'],
