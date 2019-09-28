@@ -37,13 +37,15 @@ def handleContactForm(request):
 def sendMail(fromAddress,toAddress,content,templateId):
     message = Mail(
         from_email=fromAddress,
-        to_emails=toAddress)
+        to_emails=toAddress
+        )
     message.dynamic_template_data = {
         'firstName': content['firstName'],
         'lastName': content['lastName'],
         'company': content['content'],
         'email': content['email'],
-        'message' content['message']}
+        'message' content['message']
+        }
     message.template_id = templateId
 try:
     sendgrid_client = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
