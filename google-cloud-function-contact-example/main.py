@@ -44,7 +44,7 @@ def sendMail(fromAddress,toAddress,content,templateId):
     message.dynamic_template_data = {
         'firstName': content['firstName'],
         'lastName': content['lastName'],
-        'company': content['content'],
+        'company': content['company'],
         'email': content['email'],
         'message': content['message']
         }
