@@ -1,4 +1,0 @@
-# Function dependencies, for example:
-# package>=version
-Flask==1.0.2
-Sendgrid==6.1.0
