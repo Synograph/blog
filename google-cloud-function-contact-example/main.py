@@ -5,43 +5,51 @@ from flask import Flask, redirect
 
 def handleContactForm(request):
     request_json = request.get_json()
+    formContent = dict()
 
     if request_json and 'email' in request_json:
-        email = request_json['email']
-    if request_json and 'name' in request_json:
-        name = request_json['name']
+        content['email'] = request_json['email']
+    if request_json and 'firstName' in request_json:
+        content['firstName'] = request_json['firstName']
+    if request_json and 'lastName' in request_json:
+        content['lastName'] = request_json['lastName']
     if request_json and 'message' in request_json:
-        message = request_json['message']
+        content['message'] = request_json['message']
+    if request_json and 'company' in request_json:
+        content['company'] = request_json['company']
+    if request_json and '_next' in request_json:
+        content['_next'] = request_json['_next']
 
     # Send to Synograph
-    sendMail('contact@synograph.com',
-             email,
-             'Contact Synograph.com: ' + name,
-             message)
-
-    # Send to customer
     sendMail(email,
              'contact@synograph.com',
-             'Merci de nous avoir contacté!',
-             '''Bonjour' + name + ',
-             Merci de nous avoir contacté!
-             Nous reviendrons vers vous aussi rapidement que possible :)
+             content,
+             os.environ.get('CONTACT_FORM_SYNOGRAPH_ID'))
 
-             A bientôt. L\'équipe Synograph''')
+    # Send to customer
+    sendMail('contact@synograph.com',
+             email,
+             content,
+             os.environ.get('CONTACT_FORM_CLIENT_ID'))
 
-    return redirect("https://www.synograph.com/thanks", code=302)
+    return redirect("https://www.synograph.com" + content['_next'], code=302)
 
-def sendMail(toAddress,fromAddress,mailSubject,htmlMessage):
+def sendMail(fromAddress,toAddress,content,templateId):
     message = Mail(
-    from_email=fromAddress,
-    to_emails=toAddress,
-    subject=mailSubject,
-    html_content=htmlMessage)
-    try:
-        sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
-        response = sg.send(message)
-        print(response.status_code)
-        print(response.body)
-        print(response.headers)
-    except Exception as e:
-        print(e)
+        from_email=fromAddress,
+        to_emails=toAddress)
+    message.dynamic_template_data = {
+        'firstName': content['firstName'],
+        'lastName': content['lastName'],
+        'company': content['content'],
+        'email': content['email'],
+        'message' content['message']}
+    message.template_id = templateId
+try:
+    sendgrid_client = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+    response = sendgrid_client.send(message)
+    print(response.status_code)
+    print(response.body)
+    print(response.headers)
+except Exception as e:
+    print(e.message)
