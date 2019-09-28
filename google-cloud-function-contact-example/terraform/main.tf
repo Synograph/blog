@@ -19,6 +19,12 @@ resource "google_cloudfunctions_function" "contactForm" {
   source_archive_object = "${google_storage_bucket_object.contactFormSource.name}"
   trigger_http          = true
   entry_point           = "handleContactForm"
+  environment_variables = {
+    CONTACT_EMAIL = var.,
+    CONTACT_FORM_INTERNAL_TEMPLATE_ID = var.,
+    CONTACT_FORM_CLIENT_TEMPLATE_ID = var.,
+    SENDGRID_API_KEYs = var.,
+   }
 }
 
 output "contactFormHttpsTriggerUrl" {

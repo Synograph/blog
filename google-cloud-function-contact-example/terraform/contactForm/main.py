@@ -7,7 +7,7 @@ from flask import redirect
 def handleContactForm(request):
     request_json = request.get_json()
     contactEmail = os.environ.get('CONTACT_EMAIL')
-    basePathSite = os.environ.get('BASE_PATH_SITE')
+    basePathSite = 'https://{0}/'.format(request.host)
     content = dict()
 
     # Check form entry
