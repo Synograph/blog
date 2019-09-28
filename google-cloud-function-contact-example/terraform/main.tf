@@ -20,10 +20,10 @@ resource "google_cloudfunctions_function" "contactForm" {
   trigger_http          = true
   entry_point           = "handleContactForm"
   environment_variables = {
-    CONTACT_EMAIL = var.,
-    CONTACT_FORM_INTERNAL_TEMPLATE_ID = var.,
-    CONTACT_FORM_CLIENT_TEMPLATE_ID = var.,
-    SENDGRID_API_KEYs = var.,
+    CONTACT_EMAIL = var.CONTACT_EMAIL,
+    CONTACT_FORM_INTERNAL_TEMPLATE_ID = var.CONTACT_FORM_INTERNAL_TEMPLATE_ID,
+    CONTACT_FORM_CLIENT_TEMPLATE_ID = var.CONTACT_FORM_CLIENT_TEMPLATE_ID,
+    SENDGRID_API_KEY = var.SENDGRID_API_KEY,
    }
 }
 
