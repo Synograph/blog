@@ -38,22 +38,22 @@ def handleContactForm(request):
 
 def sendMail(fromAddress,toAddress,content,templateId):
     message = Mail(
-        from_email=fromAddress,
-        to_emails=toAddress
-        )
+        from_email = fromAddress,
+        to_emails = toAddress,
+        subject = 'none',
+        html_content = 'none')
     message.dynamic_template_data = {
         'firstName': content['firstName'],
         'lastName': content['lastName'],
         'company': content['company'],
         'email': content['email'],
-        'message': content['message']
-        }
+        'message': content['message']}
     message.template_id = templateId
-try:
-    sendgrid_client = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
-    response = sendgrid_client.send(message)
-    print(response.status_code)
-    print(response.body)
-    print(response.headers)
-except Exception as e:
-    print(e)
+    try:
+        sendgrid_client = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+        response = sendgrid_client.send(message)
+        print(response.status_code)
+        print(response.body)
+        print(response.headers)
+    except Exception as e:
+        print(e)
