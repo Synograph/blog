@@ -19,19 +19,16 @@ def handleContactForm(request):
     content['_oops'] = request.form['_oops']
 
     # Send to Contact email
-    response = sendMail(content['email'],
-                        contactEmail,
-                        content,
-                        os.environ.get('CONTACT_FORM_INTERNAL_TEMPLATE_ID'))
-
-    if response != 200:
-        return redirect(basePathSite + content['_oops'], code=302)
+    sendMail(content['email'],
+             contactEmail,
+             content,
+             os.environ.get('CONTACT_FORM_INTERNAL_TEMPLATE_ID'))
 
     # Send to Client
-    response = sendMail(contactEmail,
-                        content['email'],
-                        content,
-                        os.environ.get('CONTACT_FORM_CLIENT_TEMPLATE_ID'))
+    sendMail(contactEmail,
+             content['email'],
+             content,
+             os.environ.get('CONTACT_FORM_CLIENT_TEMPLATE_ID'))
 
     return redirect(basePathSite + content['_next'], code=302)
 
@@ -54,4 +51,5 @@ def sendMail(fromAddress, toAddress, content, templateId):
         response = sendgrid_client.send(message)
         return response.status_code
     except Exception as e:
+        print(e)
         return e
